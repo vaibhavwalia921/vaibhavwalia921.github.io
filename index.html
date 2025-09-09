@@ -142,6 +142,24 @@
             padding: 0 2rem;
         }
 
+        .profile-photo {
+    margin-bottom: 2rem;
+        }
+        
+        .profile-photo img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-color);
+            box-shadow: 0 20px 40px rgba(0, 255, 170, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .profile-photo img:hover {
+            transform: scale(1.05);
+        }
+        
         .hero-subtitle {
             font-family: 'JetBrains Mono', monospace;
             color: var(--accent-color);
@@ -663,9 +681,12 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="hero-content">
-            <div class="hero-subtitle">$ whoami</div>
-            <h1 class="hero-title">Vaibhav Ahluwalia</h1>
+    <div class="hero-content">
+        <div class="profile-photo">
+            <img src="vaibhavahluwalia.JPG" alt="Vaibhav Ahluwalia" />
+        </div>
+        <div class="hero-subtitle">$ whoami</div>
+        <h1 class="hero-title">Vaibhav Ahluwalia</h1>
             <p class="hero-description">
                 Robotics Engineer specializing in SLAM, Navigation, and Control of Autonomous Mobile Robots & Manipulators
             </p>
