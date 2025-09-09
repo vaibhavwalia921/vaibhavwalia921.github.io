@@ -129,7 +129,7 @@
                 position: fixed;
                 top: 70px;
                 right: -100%;
-                width: 100%;
+                width: 250px;
                 height: calc(100vh - 70px);
                 background: rgba(10, 10, 10, 0.98);
                 backdrop-filter: blur(20px);
@@ -138,6 +138,8 @@
                 align-items: center;
                 padding-top: 2rem;
                 transition: right 0.3s ease;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+                border-left: 1px solid var(--border-color);
             }
             
             .nav-links.active {
@@ -657,9 +659,7 @@
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
+            /* Removed display: none - conflicts with mobile menu animation */
 
             .hero-title {
                 font-size: 3rem;
@@ -755,7 +755,7 @@
                     <i class="fas fa-rocket"></i>
                     View My Work
                 </a>
-                <a href="https://drive.google.com/drive/folders/1muaIDBacJknhKJXTYcibfo8KQkDssNZH?usp=share_link" class="btn btn-secondary" target="_blank">
+                <a href="https://drive.google.com/uc?export=download&id=1uaV_xkGoV1jQ4ZuOhSgEodQ5nWT6aq-n" class="btn btn-secondary" target="_blank">
                     <i class="fas fa-play"></i>
                     Watch Demos
                 </a>
@@ -1127,6 +1127,10 @@
                             <span class="tech-tag">Benchmarking</span>
                         </div>
                         <div class="project-links">
+                            <a href="Constructionandbenchmarkofanautonomoustrackedmobilerobotsystem.pdf" class="project-link" target="_blank">
+                                <i class="fas fa-file-pdf"></i>
+                                Research Paper
+                            </a>
                             <a href="#" class="project-link">
                                 <i class="fas fa-chart-bar"></i>
                                 Comparison Results
@@ -1339,18 +1343,31 @@
         const menuToggle = document.getElementById('menuToggle');
         const navLinks = document.getElementById('navLinks');
         
-        menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('active');
-            navLinks.classList.toggle('active');
-        });
-        
-        // Close menu when clicking on a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                menuToggle.classList.remove('active');
-                navLinks.classList.remove('active');
+        if (menuToggle && navLinks) {
+            menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent event bubbling
+                menuToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
             });
-        });
+            
+            // Close menu when clicking on a link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                    if (navLinks.classList.contains('active')) {
+                        menuToggle.classList.remove('active');
+                        navLinks.classList.remove('active');
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
