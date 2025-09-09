@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaibhav Ahluwalia - Lead Robotics Engineer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #111111;
+            --accent-color: #00ffaa;
+            --accent-secondary: #ff6b6b;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 10, 10, 0.98);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: radial-gradient(ellipse at center, rgba(0, 255, 170, 0.1) 0%, transparent 70%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero-subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.2s forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.4s forwards;
+        }
+
+        .hero-description {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.6s forwards;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.8s forwards;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-1);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-color);
+            color: var(--primary-bg);
+            transform: translateY(-2px);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .skill-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-1);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .skill-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-color);
+        }
+
+        .skill-icon {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .skill-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background: rgba(0, 255, 170, 0.1);
+            color: var(--accent-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0, 255, 170, 0.3);
+        }
+
+        /* Experience Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gradient-1);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 2rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            border: 3px solid var(--primary-bg);
+        }
+
+        .timeline-item:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .job-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .company-name {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .duration {
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .achievements {
+            list-style: none;
+        }
+
+        .achievements li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .achievements li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-size: 0.8rem;
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .project-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-color);
+            box-shadow: 0 20px 40px rgba(0, 255, 170, 0.1);
+        }
+
+        .project-image {
+            height: 200px;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .project-content {
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .project-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-tag {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .project-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .project-link:hover {
+            color: var(--text-primary);
+        }
+
+        /* Contact Section */
+        .contact {
+            background: var(--secondary-bg);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .contact-info {
+            text-align: center;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-item:hover {
+            color: var(--accent-color);
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-bg);
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline {
+                padding-left: 1rem;
+            }
+
+            .timeline-item {
+                padding: 1.5rem;
+            }
+
+            .timeline-item::before {
+                left: -1.5rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        /* Scroll Progress Bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--gradient-1);
+            z-index: 1001;
+            transition: width 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- Animated Background -->
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-content">
+            <div class="logo">VA</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-subtitle">$ whoami</div>
+            <h1 class="hero-title">Vaibhav Ahluwalia</h1>
+            <p class="hero-description">
+                Lead Robotics Engineer specializing in SLAM, Navigation, and Control of Autonomous Mobile Robots & Manipulators
+            </p>
+            <div class="hero-cta">
+                <a href="#projects" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i>
+                    View My Work
+                </a>
+                <a href="https://drive.google.com/drive/folders/1muaIDBacJknhKJXTYcibfo8KQkDssNZH?usp=share_link" class="btn btn-secondary" target="_blank">
+                    <i class="fas fa-play"></i>
+                    Watch Demos
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About/Skills Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Expertise & Technologies</h2>
+                <p class="section-subtitle">
+                    Bridging the gap between cutting-edge research and real-world robotic applications
+                </p>
+            </div>
+            
+            <div class="skills-grid">
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="skill-title">Robotics Frameworks</h3>
+                    <div class="skill-tags">
+                        <span class="tag">ROS & ROS2</span>
+                        <span class="tag">Gazebo</span>
+                        <span class="tag">MoveIt</span>
+                        <span class="tag">Navigation Stack</span>
+                        <span class="tag">FlexBE</span>
+                        <span class="tag">Move_base_flex</span>
+                    </div>
+                </div>
+
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3 class="skill-title">SLAM & Mapping</h3>
+                    <div class="skill-tags">
+                        <span class="tag">RTAB-MAP</span>
+                        <span class="tag">ORB-SLAM</span>
+                        <span class="tag">Hector SLAM</span>
+                        <span class="tag">G-mapping</span>
+                        <span class="tag">3D Mapping</span>
+                        <span class="tag">Sensor Fusion</span>
+                    </div>
+                </div>
+
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="skill-title">AI & Machine Learning</h3>
+                    <div class="skill-tags">
+                        <span class="tag">TensorFlow</span>
+                        <span class="tag">PyTorch</span>
+                        <span class="tag">ONNX</span>
+                        <span class="tag">MobileNet-SSD</span>
+                        <span class="tag">Computer Vision</span>
+                        <span class="tag">3D Segmentation</span>
+                    </div>
+                </div>
+
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3 class="skill-title">Hardware Platforms</h3>
+                    <div class="skill-tags">
+                        <span class="tag">NVIDIA Jetson</span>
+                        <span class="tag">Arduino</span>
+                        <span class="tag">Raspberry Pi</span>
+                        <span class="tag">Teensy</span>
+                        <span class="tag">Node MCU</span>
+                        <span class="tag">Embedded Systems</span>
+                    </div>
+                </div>
+
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3 class="skill-title">Sensor Integration</h3>
+                    <div class="skill-tags">
+                        <span class="tag">Intel RealSense</span>
+                        <span class="tag">Zed Camera</span>
+                        <span class="tag">RPLIDAR</span>
+                        <span class="tag">Ouster LiDAR</span>
+                        <span class="tag">IMU Fusion</span>
+                        <span class="tag">Point Clouds</span>
+                    </div>
+                </div>
+
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3 class="skill-title">Programming</h3>
+                    <div class="skill-tags">
+                        <span class="tag">C/C++</span>
+                        <span class="tag">Python</span>
+                        <span class="tag">Embedded C</span>
+                        <span class="tag">XML</span>
+                        <span class="tag">Linux</span>
+                        <span class="tag">Git</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Professional Journey</h2>
+                <p class="section-subtitle">
+                    Leading robotics innovation across autonomous systems, manipulation, and mobile platforms
+                </p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item fade-in">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="job-title">Lead Robotics Engineer</div>
+                            <div class="company-name">Cudatech Software & Engineering, Ankara</div>
+                        </div>
+                        <div class="duration">Aug 2024 - Apr 2025</div>
+                    </div>
+                    <ul class="achievements">
+                        <li>Developed hardware interface for DH gripper AG95 integration with Elfin5 robotic arm using ROS and MoveIt configuration</li>
+                        <li>Integrated autonomous mobile robot (AMR) with robotic manipulator for mobile manipulation tasks, specializing in table cleaning applications</li>
+                        <li>Designed and implemented advanced table-cleaning planner using point cloud data for 3D cleaning path generation</li>
+                        <li>Created comprehensive cleaning management system with real-time monitoring, start/stop functionality, and status tracking</li>
+                        <li>Led cross-functional robotics team while maintaining hands-on technical development and architecture decisions</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item fade-in">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="job-title">Robotics Engineer</div>
+                            <div class="company-name">SolarCleano, Luxembourg</div>
+                        </div>
+                        <div class="duration">Oct 2023 - Apr 2024</div>
+                    </div>
+                    <ul class="achievements">
+                        <li>Implemented autonomous behaviors using FlexBE ROS framework on solar panel cleaning robot B1A</li>
+                        <li>Developed custom Global planner adhering to nav_core::BaseGlobalPlanner interface for move_base node</li>
+                        <li>Created comprehensive simulation environment with Gazebo and automated world generation using real-world obstacle poses</li>
+                        <li>Optimized navigation algorithms for outdoor solar farm environments with complex terrain challenges</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item fade-in">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="job-title">Robotics Research Assistant</div>
+                            <div class="company-name">Elektronikas datorzinātņu institūts, Riga</div>
+                        </div>
+                        <div class="duration">Feb 2022 - Oct 2023</div>
+                    </div>
+                    <ul class="achievements">
+                        <li>Developed ROS2 control package for AR4 robotic arm integrated with Tiago base for mobile manipulation (Edge AI project)</li>
+                        <li>Conducted cutting-edge research in 3D semantic segmentation for enhanced robotic mapping and perception</li>
+                        <li>Deployed 3D SLAM solutions using Intel RealSense D415 on PAL Robotics Tiago base platform</li>
+                        <li>Created robotic package sorting system using UR5 robot with AI-based high precision grasp detection (TRINITY project)</li>
+                        <li>Achieved 98% confidence bottle detection at 30 fps using retrained Jetson-inference mobilenet-SSD model</li>
+                        <li>Implemented autonomous exploration algorithms using move_base and explore_lite ROS packages</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Featured Projects</h2>
+                <p class="section-subtitle">
+                    Innovative robotics solutions spanning mobile manipulation, autonomous navigation, and AI-driven perception
+                </p>
+            </div>
+
+            <div class="projects-grid">
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Mobile Manipulation System</h3>
+                        <p class="project-description">
+                            Integrated autonomous mobile robot with robotic manipulator for advanced table cleaning applications. Features 3D path planning using point cloud data and real-time cleaning management system.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">ROS</span>
+                            <span class="tech-tag">MoveIt</span>
+                            <span class="tech-tag">Point Cloud</span>
+                            <span class="tech-tag">3D Planning</span>
+                            <span class="tech-tag">Mobile Manipulation</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">
+                                <i class="fas fa-video"></i>
+                                Demo Video
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fab fa-github"></i>
+                                Source Code
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <i class="fas fa-solar-panel"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Autonomous Solar Panel Cleaning Robot</h3>
+                        <p class="project-description">
+                            SolarCleano B1A robot with FlexBE behavior implementation. Custom global planner with Gazebo simulation environment and real-world obstacle mapping capabilities.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">FlexBE ROS</span>
+                            <span class="tech-tag">Navigation</span>
+                            <span class="tech-tag">Gazebo</span>
+                            <span class="tech-tag">Path Planning</span>
+                            <span class="tech-tag">Outdoor Robotics</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://solarcleano.com/product/solarbridge-autonomous-solar-panel-cleaning-robot-b1a" class="project-link" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                                Product Page
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fas fa-file-alt"></i>
+                                Technical Report
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Autonomous Tracked Mobile Robot</h3>
+                        <p class="project-description">
+                            Built using NVIDIA Jetson Xavier NX with SLAM and path planning via RTAB-MAP. Implemented sensor fusion with Extended Kalman Filter for enhanced localization accuracy.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">NVIDIA Jetson</span>
+                            <span class="tech-tag">RTAB-MAP</span>
+                            <span class="tech-tag">EKF</span>
+                            <span class="tech-tag">SLAM</span>
+                            <span class="tech-tag">Sensor Fusion</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://www.researchgate.net/publication/358248333_Construction_and_benchmark_of_an_autonomous_tracked_mobile_robot_system" class="project-link" target="_blank">
+                                <i class="fas fa-graduation-cap"></i>
+                                Research Paper
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fas fa-chart-line"></i>
+                                Performance Analysis
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">AI-Powered Package Sorting System</h3>
+                        <p class="project-description">
+                            Developed robotic solution for post office automation using UR5 robot with AI-based high precision grasp detection. Part of the TRINITY project for automated logistics.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">UR5 Robot</span>
+                            <span class="tech-tag">AI Grasping</span>
+                            <span class="tech-tag">Computer Vision</span>
+                            <span class="tech-tag">Logistics</span>
+                            <span class="tech-tag">TRINITY Project</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://www.mdpi.com/2076-3417/13/13/7643" class="project-link" target="_blank">
+                                <i class="fas fa-file-pdf"></i>
+                                Published Article
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fas fa-cogs"></i>
+                                System Architecture
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Real-time Object Detection System</h3>
+                        <p class="project-description">
+                            Retrained Jetson-inference mobilenet-SSD model achieving 98% confidence at 30 fps for crushed bottle detection. Integrated with autonomous navigation for environmental cleanup.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">MobileNet-SSD</span>
+                            <span class="tech-tag">Jetson Inference</span>
+                            <span class="tech-tag">Real-time Detection</span>
+                            <span class="tech-tag">Environment Cleanup</span>
+                            <span class="tech-tag">Edge AI</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">
+                                <i class="fas fa-play"></i>
+                                Live Demo
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fas fa-brain"></i>
+                                Model Performance
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
+                    <div class="project-image">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Visual Odometry Comparison Study</h3>
+                        <p class="project-description">
+                            Comprehensive analysis of visual odometry techniques using Intel RealSense T265, D435, and Zed stereo camera. OptiTrack validation determined optimal sensor configuration.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Visual Odometry</span>
+                            <span class="tech-tag">Intel RealSense</span>
+                            <span class="tech-tag">Zed Camera</span>
+                            <span class="tech-tag">OptiTrack</span>
+                            <span class="tech-tag">Benchmarking</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">
+                                <i class="fas fa-chart-bar"></i>
+                                Comparison Results
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fas fa-download"></i>
+                                Dataset
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Let's Build the Future</h2>
+                <p class="section-subtitle">
+                    Ready to discuss your next robotics project or collaboration opportunity?
+                </p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-info fade-in">
+                    <a href="tel:+918287962373" class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <div>Phone</div>
+                            <div>(+91) 8287962373</div>
+                        </div>
+                    </a>
+
+                    <a href="mailto:vaibhavwalia921@gmail.com" class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <div>Email</div>
+                            <div>vaibhavwalia921@gmail.com</div>
+                        </div>
+                    </a>
+
+                    <a href="https://www.linkedin.com/in/vaibhav-ahluwalia-ab601a159/" class="contact-item" target="_blank">
+                        <div class="contact-icon">
+                            <i class="fab fa-linkedin"></i>
+                        </div>
+                        <div>
+                            <div>LinkedIn</div>
+                            <div>Professional Network</div>
+                        </div>
+                    </a>
+
+                    <a href="https://drive.google.com/drive/folders/1muaIDBacJknhKJXTYcibfo8KQkDssNZH?usp=share_link" class="contact-item" target="_blank">
+                        <div class="contact-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <div>
+                            <div>Project Demos</div>
+                            <div>Watch Live Robotics</div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="contact-info fade-in">
+                    <div style="text-align: center; padding: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--accent-color);">Areas of Expertise</h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+                            <span class="tag">Mobile Robotics</span>
+                            <span class="tag">SLAM Navigation</span>
+                            <span class="tag">Robot Manipulation</span>
+                            <span class="tag">Computer Vision</span>
+                            <span class="tag">AI Integration</span>
+                            <span class="tag">ROS Development</span>
+                            <span class="tag">Sensor Fusion</span>
+                            <span class="tag">Autonomous Systems</span>
+                        </div>
+                        
+                        <div style="margin-top: 2rem;">
+                            <a href="#" class="btn btn-primary">
+                                <i class="fas fa-download"></i>
+                                Download Resume
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Vaibhav Ahluwalia. Crafted with passion for robotics innovation.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                "Building tomorrow's autonomous world, one robot at a time."
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Animated Background Particles
+        function createParticles() {
+            const bgAnimation = document.getElementById('bgAnimation');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                bgAnimation.appendChild(particle);
+            }
+        }
+
+        // Scroll Progress Bar
+        function updateScrollProgress() {
+            const scrollProgress = document.querySelector('.scroll-progress');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / scrollHeight) * 100;
+            scrollProgress.style.width = progress + '%';
+        }
+
+        // Navbar Background on Scroll
+        function updateNavbar() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+
+        // Fade in Animation on Scroll
+        function animateOnScroll() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // Smooth Scrolling for Navigation Links
+        function smoothScrolling() {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Hover Effects for Project Cards
+        function projectCardEffects() {
+            const projectCards = document.querySelectorAll('.project-card');
+            projectCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        }
+
+        // Initialize all functions
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            smoothScrolling();
+            projectCardEffects();
+            animateOnScroll();
+        });
+
+        // Event listeners
+        window.addEventListener('scroll', () => {
+            updateScrollProgress();
+            updateNavbar();
+            animateOnScroll();
+        });
+
+        // Hero CTA smooth scroll
+        document.querySelector('.hero-cta .btn-primary').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelector('#projects').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
