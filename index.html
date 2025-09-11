@@ -625,6 +625,65 @@
             color: var(--accent-color);
         }
 
+        /* Company Logos Section */
+        .logos-section {
+            background: var(--secondary-bg);
+            padding: 3rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .logos-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .logos-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .logos-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .logo-image {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+            filter: brightness(0.8);
+            transition: filter 0.3s ease;
+        }
+
+        .logo-image:hover {
+            filter: brightness(1.2);
+        }
+
+        .logo-name {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
         /* Footer */
         .footer {
             background: var(--primary-bg);
@@ -1225,6 +1284,27 @@
                             </a>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Company Logos Section -->
+    <section class="logos-section">
+        <div class="logos-container">
+            <h3 class="logos-title">Where I've Made an Impact</h3>
+            <div class="logos-grid">
+                <div class="logo-item fade-in">
+                    <img src="EDI.png" alt="Elektronikas datorzinātņu institūts" class="logo-image">
+                    <span class="logo-name">Elektronikas datorzinātņu institūts</span>
+                </div>
+                <div class="logo-item fade-in">
+                    <img src="Solarcleano.jpg" alt="SolarCleano" class="logo-image">
+                    <span class="logo-name">SolarCleano</span>
+                </div>
+                <div class="logo-item fade-in">
+                    <img src="Cudatech.png" alt="Cudatech" class="logo-image">
+                    <span class="logo-name">Cudatech</span>
                 </div>
             </div>
         </div>
