@@ -27,6 +27,10 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: var(--primary-bg);
@@ -91,6 +95,7 @@
             font-size: 1.5rem;
             font-weight: 600;
             color: var(--accent-color);
+            text-decoration: none;
         }
         .menu-toggle {
             display: none;
@@ -186,38 +191,66 @@
 
         /* Hero Section */
         .hero {
-            height: 100vh;
+            /* min-height (not height) so tall content grows the section instead of
+               overflowing upward under the fixed navbar; top padding clears the navbar */
+            /* slightly under a full screen so the logo strip peeks in and invites scrolling */
+            min-height: 88vh;
+            min-height: 88svh;
+            padding: 7rem 0 4rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            text-align: center;
             position: relative;
-            background: radial-gradient(ellipse at center, rgba(0, 255, 170, 0.1) 0%, transparent 70%);
+            background: radial-gradient(ellipse at 75% 45%, rgba(0, 255, 170, 0.09) 0%, transparent 60%);
         }
 
-        .hero-content {
-            max-width: 800px;
+        .hero-inner {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 0 2rem;
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+            gap: 4rem;
+            align-items: center;
         }
 
-        .profile-photo {
-    margin-bottom: 2rem;
+        .hero-photo {
+            position: relative;
+            isolation: isolate;
+            justify-self: end;
+            width: 100%;
+            max-width: 380px;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.3s forwards;
         }
-        
-        .profile-photo img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--accent-color);
-            box-shadow: 0 20px 40px rgba(0, 255, 170, 0.3);
+
+        /* offset accent frame behind the photo */
+        .hero-photo::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            transform: translate(18px, 18px);
+            border: 2px solid var(--accent-color);
+            border-radius: 24px;
+            opacity: 0.45;
+            z-index: -1;
             transition: transform 0.3s ease;
         }
-        
-        .profile-photo img:hover {
-            transform: scale(1.05);
+
+        .hero-photo:hover::before {
+            transform: translate(10px, 10px);
         }
-        
+
+        .hero-photo img {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 5;
+            object-fit: cover;
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 255, 170, 0.12);
+        }
+
         .hero-subtitle {
             font-family: 'JetBrains Mono', monospace;
             color: var(--accent-color);
@@ -228,9 +261,11 @@
         }
 
         .hero-title {
-            font-size: clamp(3rem, 8vw, 6rem);
+            font-size: clamp(2.75rem, 6vw, 4.75rem);
             font-weight: 700;
-            margin-bottom: 1rem;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.25rem;
             background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-color) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -240,20 +275,49 @@
         }
 
         .hero-description {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             color: var(--text-secondary);
+            max-width: 36rem;
             margin-bottom: 2rem;
             opacity: 0;
             animation: fadeInUp 1s ease 0.6s forwards;
         }
 
+        .hero-stats {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem 2.25rem;
+            padding: 1.25rem 0;
+            margin-bottom: 2.25rem;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.7s forwards;
+        }
+
+        .stat-num {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
         .hero-cta {
             display: flex;
             gap: 1rem;
-            justify-content: center;
             flex-wrap: wrap;
             opacity: 0;
-            animation: fadeInUp 1s ease 0.8s forwards;
+            animation: fadeInUp 1s ease 0.85s forwards;
         }
 
         .btn {
@@ -482,11 +546,103 @@
             font-size: 0.8rem;
         }
 
-        /* Projects Grid */
+        /* Internships: smaller timeline entries */
+        .timeline-item-compact {
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-item-compact::before {
+            top: 1.6rem;
+        }
+
+        .timeline-item-compact .job-title {
+            font-size: 1.15rem;
+        }
+
+        .achievements a {
+            color: var(--accent-color);
+        }
+
+        .timeline-more {
+            text-align: center;
+        }
+
+        /* Education & Awards */
+        .edu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 2rem;
+        }
+
+        .edu-item + .edu-item {
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .edu-degree {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .edu-school {
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-more .project-link {
+            display: inline-flex;
+        }
+
+        /* Projects */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2rem;
+        }
+
+        .featured-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .compact-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Current flagship project: full-width card with the video beside the text.
+           Two classes so it beats the later .project-card { display: flex } rule. */
+        .project-card.project-spotlight {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+            margin-bottom: 2rem;
+        }
+
+        .project-spotlight .project-media {
+            aspect-ratio: auto;
+            align-self: stretch;
+            min-height: 360px;
+        }
+
+        .project-spotlight .project-content {
+            justify-content: center;
+            padding: 2.5rem;
+        }
+
+        .project-spotlight .project-title {
+            font-size: 1.6rem;
+        }
+
+        .project-spotlight .project-links {
+            margin-top: 0;
+        }
+
+        .subsection-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--accent-color);
+            margin: 4rem 0 1.5rem;
         }
 
         .project-card {
@@ -496,7 +652,8 @@
             overflow: hidden;
             transition: all 0.3s ease;
             position: relative;
-            cursor: pointer;
+            display: flex;
+            flex-direction: column;
         }
 
         .project-card::before {
@@ -517,40 +674,76 @@
         }
 
         .project-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-6px);
             border-color: var(--accent-color);
             box-shadow: 0 20px 40px rgba(0, 255, 170, 0.1);
         }
 
-        .project-image {
-            height: 200px;
-            background: var(--gradient-1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: white;
+        .project-media {
             position: relative;
+            aspect-ratio: 16 / 10;
+            background: #000;
+            overflow: hidden;
             z-index: 2;
+        }
+
+        .project-media img,
+        .project-media video {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* charts/figures: show the whole image on white instead of cropping it */
+        .project-media.media-contain {
+            background: #fff;
+        }
+
+        .project-media.media-contain img {
+            object-fit: contain;
+            padding: 0.75rem;
         }
 
         .project-content {
             padding: 2rem;
             position: relative;
             z-index: 2;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .compact-grid .project-content {
+            padding: 1.5rem;
+        }
+
+        .project-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
         }
 
         .project-title {
             font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             color: var(--text-primary);
+        }
+
+        .compact-grid .project-title {
+            font-size: 1.1rem;
         }
 
         .project-description {
             color: var(--text-secondary);
             margin-bottom: 1.5rem;
             line-height: 1.6;
+        }
+
+        .compact-grid .project-description {
+            font-size: 0.95rem;
         }
 
         .project-tech {
@@ -571,7 +764,9 @@
 
         .project-links {
             display: flex;
-            gap: 1rem;
+            flex-wrap: wrap;
+            gap: 0.75rem 1.5rem;
+            margin-top: auto;
         }
 
         .project-link {
@@ -625,11 +820,12 @@
             color: var(--accent-color);
         }
 
-        /* Company Logos Section */
+        /* Company Logos Strip (directly under the hero) */
         .logos-section {
             background: var(--secondary-bg);
-            padding: 3rem 0;
+            padding: 2.5rem 0;
             border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .logos-container {
@@ -640,10 +836,13 @@
         }
 
         .logos-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
         }
 
         .logos-grid {
@@ -658,7 +857,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
             transition: transform 0.3s ease;
         }
 
@@ -667,7 +866,7 @@
         }
 
         .logo-image {
-            height: 80px;
+            height: 56px;
             width: auto;
             object-fit: contain;
             filter: brightness(0.8);
@@ -679,7 +878,7 @@
         }
 
         .logo-name {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
             font-weight: 500;
         }
@@ -716,24 +915,81 @@
             transform: translateY(0);
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            /* Removed display: none - conflicts with mobile menu animation */
-
-            .hero-title {
-                font-size: 3rem;
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero {
+                padding-top: 6rem;
             }
 
+            .hero-inner {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+                text-align: center;
+            }
+
+            .hero-photo {
+                order: -1;
+                justify-self: center;
+                max-width: 220px;
+            }
+
+            .hero-photo::before {
+                transform: translate(10px, 10px);
+            }
+
+            .hero-description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-stats,
+            .hero-cta {
+                justify-content: center;
+            }
+
+            .compact-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
             .section-title {
                 font-size: 2rem;
             }
 
-            .skills-grid {
+            .skills-grid,
+            .edu-grid,
+            .project-card.project-spotlight,
+            .featured-grid,
+            .compact-grid {
                 grid-template-columns: 1fr;
             }
 
-            .projects-grid {
-                grid-template-columns: 1fr;
+            .project-spotlight .project-media {
+                aspect-ratio: 16 / 10;
+                min-height: 0;
+            }
+
+            .hero-stats {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 1.25rem 1rem;
+            }
+
+            .hero-photo {
+                max-width: 180px;
+            }
+
+            .hero-description {
+                font-size: 1.05rem;
+            }
+
+            .stat-num {
+                font-size: 1.6rem;
+            }
+
+            .stat-label {
+                font-size: 0.8rem;
             }
 
             .timeline {
@@ -757,6 +1013,10 @@
                 width: 100%;
                 max-width: 300px;
                 justify-content: center;
+            }
+
+            .logos-grid {
+                gap: 2rem;
             }
         }
 
@@ -783,47 +1043,474 @@
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-content">
+            <a href="#home" class="logo">VA</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
             <div class="menu-toggle" id="menuToggle">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
-    <div class="hero-content">
-        <div class="profile-photo">
-            <img src="vaibhavahluwalia.JPG" alt="Vaibhav Ahluwalia" />
+        <div class="hero-inner">
+            <div class="hero-text">
+                <div class="hero-subtitle">$ whoami</div>
+                <h1 class="hero-title">Vaibhav Ahluwalia</h1>
+                <p class="hero-description">
+                    Senior Robotics Engineer at Sapien Robotics, building a multi-robot parcel sorting system deployed in Amazon facilities. Specialized in SLAM, navigation and control of autonomous mobile robots &amp; manipulators.
+                </p>
+                <ul class="hero-stats">
+                    <li><span class="stat-num">5+</span><span class="stat-label">years in robotics</span></li>
+                    <li><span class="stat-num">4</span><span class="stat-label">countries worked in</span></li>
+                    <li><span class="stat-num">2</span><span class="stat-label">published papers</span></li>
+                    <li><span class="stat-num">7+</span><span class="stat-label">robot platforms</span></li>
+                </ul>
+                <div class="hero-cta">
+                    <a href="#projects" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i>
+                        View My Work
+                    </a>
+                    <a href="https://drive.google.com/drive/folders/1muaIDBacJknhKJXTYcibfo8KQkDssNZH?usp=sharing" class="btn btn-secondary" target="_blank" rel="noopener">
+                        <i class="fas fa-play"></i>
+                        Watch Demos
+                    </a>
+                </div>
+            </div>
+            <div class="hero-photo">
+                <img src="img/vaibhav-portrait.jpg" alt="Vaibhav Ahluwalia" width="800" height="1000">
+            </div>
         </div>
-        <div class="hero-subtitle">$ whoami</div>
-        <h1 class="hero-title">Vaibhav Ahluwalia</h1>
-            <p class="hero-description">
-                Robotics Engineer specializing in SLAM, Navigation, and Control of Autonomous Mobile Robots & Manipulators
-            </p>
-            <div class="hero-cta">
-                <a href="#projects" class="btn btn-primary">
-                    <i class="fas fa-rocket"></i>
-                    View My Work
-                </a>
-                <a href="https://drive.google.com/drive/folders/1muaIDBacJknhKJXTYcibfo8KQkDssNZH?usp=sharing" class="btn btn-secondary" target="_blank">
-                    <i class="fas fa-play"></i>
-                    Watch Demos
+    </section>
+
+    <!-- Company Logos Strip -->
+    <section class="logos-section">
+        <div class="logos-container">
+            <h2 class="logos-title">Where I've Made an Impact</h2>
+            <div class="logos-grid">
+                <div class="logo-item fade-in">
+                    <img src="img/sapien-robotics-logo.png" alt="Sapien Robotics" class="logo-image">
+                    <span class="logo-name">Sapien Robotics</span>
+                </div>
+                <div class="logo-item fade-in">
+                    <img src="Cudatech.png" alt="Cudatech" class="logo-image">
+                    <span class="logo-name">Cudatech</span>
+                </div>
+                <div class="logo-item fade-in">
+                    <img src="Solarcleano.jpg" alt="SolarCleano" class="logo-image">
+                    <span class="logo-name">SolarCleano</span>
+                </div>
+                <div class="logo-item fade-in">
+                    <img src="EDI.png" alt="Elektronikas un datorzinātņu institūts" class="logo-image">
+                    <span class="logo-name">Elektronikas un datorzinātņu institūts</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Featured Projects</h2>
+                <p class="section-subtitle">
+                    Robotics solutions spanning warehouse automation, mobile manipulation, autonomous navigation, and AI-driven perception
+                </p>
+            </div>
+
+            <article class="project-card project-spotlight fade-in">
+                <div class="project-media">
+                    <video class="project-video" muted loop playsinline preload="none" poster="img/muvro-sorter-poster.jpg" aria-label="MUVRO sorter: parcels on the infeed conveyor, dropping into sorting chutes, and a sorting bot moving through the machine">
+                        <source src="video/muvro-sorter.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="project-content">
+                    <div class="project-meta">Sapien Robotics · 2025–present</div>
+                    <h3 class="project-title">MUVRO Smart Parcel Sorting System</h3>
+                    <p class="project-description">
+                        Large-scale smart parcel sorting system for warehouses with multiple mobile bots, deployed in Amazon facilities. Software architecture in Go and PostgreSQL, scanner, profiler and load-cell infeed integration, and PLC communication over OPC UA, ADS, MQTT and Codesys with TwinCAT and Beckhoff PLCs.
+                    </p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Go</span>
+                        <span class="tech-tag">PostgreSQL</span>
+                        <span class="tech-tag">OPC UA</span>
+                        <span class="tech-tag">MQTT</span>
+                        <span class="tech-tag">TwinCAT / Beckhoff</span>
+                        <span class="tech-tag">Multi-robot Systems</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="video/muvro-sorter-full.mp4" class="project-link" target="_blank" rel="noopener">
+                            <i class="fas fa-video"></i>
+                            Full Video
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <div class="projects-grid featured-grid">
+                <article class="project-card fade-in">
+                    <div class="project-media">
+                        <video class="project-video" muted loop playsinline preload="none" poster="img/mobile-manipulation-poster.jpg" aria-label="Robot arm on a mobile base wiping a table">
+                            <source src="video/mobile-manipulation.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-meta">Cudatech · 2024–25</div>
+                        <h3 class="project-title">Mobile Manipulation System</h3>
+                        <p class="project-description">
+                            Integrated autonomous mobile robot with robotic manipulator for advanced table cleaning applications. Features 3D path planning using point cloud data and real-time cleaning management system.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">ROS</span>
+                            <span class="tech-tag">MoveIt</span>
+                            <span class="tech-tag">Point Cloud</span>
+                            <span class="tech-tag">3D Planning</span>
+                            <span class="tech-tag">Mobile Manipulation</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://drive.google.com/file/d/1uaV_xkGoV1jQ4ZuOhSgEodQ5nWT6aq-n/view?usp=share_link" class="project-link" target="_blank" rel="noopener">
+                                <i class="fas fa-video"></i>
+                                Full Video
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <article class="project-card fade-in">
+                    <div class="project-media">
+                        <img loading="lazy" src="img/B1A.jpg" alt="SolarCleano B1A solar panel cleaning robot in a field" style="object-position: center 30%;">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-meta">SolarCleano · 2023–24</div>
+                        <h3 class="project-title">Autonomous Solar Panel Cleaning Robot</h3>
+                        <p class="project-description">
+                            SolarCleano B1A robot with FlexBE behavior implementation. Custom global planner with Gazebo simulation environment and real-world obstacle mapping capabilities.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">FlexBE ROS</span>
+                            <span class="tech-tag">Navigation</span>
+                            <span class="tech-tag">Gazebo</span>
+                            <span class="tech-tag">Path Planning</span>
+                            <span class="tech-tag">Outdoor Robotics</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://www.solarcleano.com/products-autonomous-solarcleano-b1a" class="project-link" target="_blank" rel="noopener">
+                                <i class="fas fa-external-link-alt"></i>
+                                Product Page
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <article class="project-card fade-in">
+                    <div class="project-media">
+                        <video class="project-video" muted loop playsinline preload="none" poster="img/package-sorting-poster.jpg" aria-label="UR5 robot arm picking envelopes from a pile">
+                            <source src="video/package-sorting.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-meta">EDI · TRINITY project · 2022–23</div>
+                        <h3 class="project-title">AI-Powered Package Sorting System</h3>
+                        <p class="project-description">
+                            Robotic solution for post office automation using UR5 robot with AI-based high precision grasp detection. Part of the TRINITY project for automated logistics.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">UR5 Robot</span>
+                            <span class="tech-tag">AI Grasping</span>
+                            <span class="tech-tag">Computer Vision</span>
+                            <span class="tech-tag">Logistics</span>
+                            <span class="tech-tag">TRINITY Project</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://drive.google.com/file/d/1VHLhA7Kg9xgYuSutmUAiM6AMAW4Q3PTb/view?usp=share_link" class="project-link" target="_blank" rel="noopener">
+                                <i class="fas fa-video"></i>
+                                Full Video
+                            </a>
+                            <a href="https://www.mdpi.com/2076-3417/13/13/7643" class="project-link" target="_blank" rel="noopener">
+                                <i class="fas fa-file-pdf"></i>
+                                Published Article
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <article class="project-card fade-in">
+                    <div class="project-media">
+                        <video class="project-video" muted loop playsinline preload="none" poster="img/tracked-robot-slam-poster.jpg" aria-label="3D SLAM map being built as the tracked robot drives">
+                            <source src="video/tracked-robot-slam.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-meta">EDI · VIZTA project · 2021–22</div>
+                        <h3 class="project-title">Autonomous Tracked Mobile Robot</h3>
+                        <p class="project-description">
+                            Built using NVIDIA Jetson Xavier NX with SLAM and path planning via RTAB-MAP. Implemented sensor fusion with Extended Kalman Filter for enhanced localization accuracy.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">NVIDIA Jetson</span>
+                            <span class="tech-tag">RTAB-MAP</span>
+                            <span class="tech-tag">EKF</span>
+                            <span class="tech-tag">SLAM</span>
+                            <span class="tech-tag">Sensor Fusion</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://www.researchgate.net/publication/358248333_Construction_and_benchmark_of_an_autonomous_tracked_mobile_robot_system" class="project-link" target="_blank" rel="noopener">
+                                <i class="fas fa-graduation-cap"></i>
+                                Research Paper
+                            </a>
+                            <a href="https://drive.google.com/file/d/1wCusOr3aWtvzOS_CrD9gdRU1NeCQUcZj/view?usp=share_link" class="project-link" target="_blank" rel="noopener">
+                                <i class="fas fa-video"></i>
+                                Full Video
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <h3 class="subsection-title fade-in">// more projects</h3>
+            <div class="projects-grid compact-grid">
+                <article class="project-card fade-in">
+                    <div class="project-media">
+                        <video class="project-video" muted loop playsinline preload="none" poster="img/bottle-detection-poster.jpg" aria-label="Live bottle detections with confidence scores">
+                            <source src="video/bottle-detection.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="project-content">
+                        <div class="project-meta">EDI · 2022–23</div>
+                        <h3 class="project-title">Real-time Object Detection System</h3>
+                        <p class="project-description">
+                            Retrained Jetson-inference mobilenet-SSD model achieving 98% confidence at 30 fps for crushed bottle detection. Integrated with autonomous navigation for environmental cleanup.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">MobileNet-SSD</span>
+                            <span class="tech-tag">Jetson Inference</span>
+                            <span class="tech-tag">Real-time Detection</span>
+                            <span class="tech-tag">Edge AI</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://drive.google.com/file/d/1_QNgQGoFb3ye8VW6oO51bZaegWpRPKaI/view?usp=share_link" class="project-link" target="_blank" rel="noopener">
+                                <i class="fas fa-video"></i>
+                                Full Video
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <article class="project-card fade-in">
+                    <div class="project-media">
+                        <img loading="lazy" src="img/AR4_arm.jpg" alt="AR4 robotic arm">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-meta">EDI · Edge AI project · 2022–23</div>
+                        <h3 class="project-title">AR4 Robotic Arm with ROS2 Interface</h3>
+                        <p class="project-description">
+                            Developed comprehensive ROS2 control package for AR4 robotic arm integrated with Tiago base for advanced mobile manipulation tasks. Implemented MoveIt configuration for precise arm control and coordination.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">ROS2</span>
+                            <span class="tech-tag">MoveIt</span>
+                            <span class="tech-tag">AR4 Arm</span>
+                            <span class="tech-tag">Tiago Base</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://drive.google.com/file/d/1mCH7Mi5NGciucyi1u1tgrhPysb0KHCKX/view?usp=share_link" class="project-link" target="_blank" rel="noopener">
+                                <i class="fas fa-video"></i>
+                                Demo Video
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <article class="project-card fade-in">
+                    <div class="project-media media-contain">
+                        <img loading="lazy" src="img/vo-trajectories.png" alt="Trajectory plot comparing T265, ZED and RGB-D odometry against OptiTrack ground truth">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-meta">EDI · VIZTA project · 2021–22</div>
+                        <h3 class="project-title">Visual Odometry Comparison Study</h3>
+                        <p class="project-description">
+                            Comprehensive analysis of visual odometry techniques using Intel RealSense T265, D435, and Zed stereo camera. OptiTrack validation determined optimal sensor configuration.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Visual Odometry</span>
+                            <span class="tech-tag">Intel RealSense</span>
+                            <span class="tech-tag">Zed Camera</span>
+                            <span class="tech-tag">OptiTrack</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="Constructionandbenchmarkofanautonomoustrackedmobilerobotsystem.pdf" class="project-link" target="_blank" rel="noopener">
+                                <i class="fas fa-file-pdf"></i>
+                                Research Paper
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Professional Journey</h2>
+                <p class="section-subtitle">
+                    Leading robotics innovation across autonomous systems, manipulation, and mobile platforms
+                </p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item fade-in">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="job-title">Senior Robotics Engineer</div>
+                            <div class="company-name">Sapien Robotics, Delhi</div>
+                        </div>
+                        <div class="duration">Dec 2025 - Present</div>
+                    </div>
+                    <ul class="achievements">
+                        <li>Spearheaded a large-scale smart parcel sorting system with multiple mobile bots, deployed in Amazon facilities</li>
+                        <li>Engineered the software architecture in Go and PostgreSQL for robust data handling and real-time operational reliability</li>
+                        <li>Integrated scanner, profiler and load-cell components with the infeed system, and connected hardware and software over OPC UA, ADS, MQTT and Codesys on TwinCAT/Beckhoff PLCs</li>
+                    </ul>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="job-title">Lead Robotics Engineer</div>
+                            <div class="company-name">Cudatech Software &amp; Engineering, Ankara (Hybrid)</div>
+                        </div>
+                        <div class="duration">Aug 2024 - Apr 2025</div>
+                    </div>
+                    <ul class="achievements">
+                        <li>Led a cross-functional robotics team building a mobile manipulator (AMR + robotic arm) for autonomous table cleaning</li>
+                        <li>Designed a 3D cleaning-path planner from point cloud data, plus a cleaning management system with real-time monitoring, start/stop and status tracking</li>
+                        <li>Built the ROS/MoveIt hardware interface integrating the DH AG95 gripper with the Elfin5 arm</li>
+                    </ul>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="job-title">Robotics Engineer</div>
+                            <div class="company-name">SolarCleano, Luxembourg</div>
+                        </div>
+                        <div class="duration">Oct 2023 - Apr 2024</div>
+                    </div>
+                    <ul class="achievements">
+                        <li>Implemented autonomous behaviors with FlexBE on the B1A solar panel cleaning robot</li>
+                        <li>Developed a custom global planner (nav_core::BaseGlobalPlanner plugin for move_base) for outdoor solar-farm terrain</li>
+                        <li>Built a Gazebo simulation with worlds generated automatically from real-world obstacle poses</li>
+                    </ul>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="job-title">Robotics Research Assistant</div>
+                            <div class="company-name">Elektronikas un datorzinātņu institūts, Riga</div>
+                        </div>
+                        <div class="duration">Feb 2022 - Oct 2023</div>
+                    </div>
+                    <ul class="achievements">
+                        <li>Built a ROS2 control package for the AR4 arm on a PAL Tiago base for mobile manipulation, and deployed 3D SLAM with an Intel RealSense D415 (Edge AI project)</li>
+                        <li>Retrained a Jetson-inference MobileNet-SSD model for bottle detection at 98% confidence and 30 fps, for environmental cleanup</li>
+                        <li>Helped architect and build a UR5 package-sorting system with AI-based high-precision grasp detection (EU-funded TRINITY project)</li>
+                    </ul>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="job-title">Robotics Programming Engineer</div>
+                            <div class="company-name">Elektronikas un datorzinātņu institūts, Riga</div>
+                        </div>
+                        <div class="duration">Feb 2021 - Jan 2022</div>
+                    </div>
+                    <ul class="achievements">
+                        <li>Designed and built an autonomous tracked robot on NVIDIA Jetson Xavier NX: RTAB-Map SLAM, move_base path planning and EKF sensor fusion of LiDAR, camera and IMU data</li>
+                        <li>Benchmarked visual odometry from Intel RealSense T265, D435 and ZED cameras against OptiTrack ground truth, identifying the T265 as the best fit</li>
+                        <li>Published the robot's design and benchmark results as a research paper (VIZTA project)</li>
+                    </ul>
+                </div>
+                <div class="timeline-item timeline-item-compact fade-in">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="job-title">Robotics Intern</div>
+                            <div class="company-name">Elektronikas un datorzinātņu institūts, Riga</div>
+                        </div>
+                        <div class="duration">Sep 2020 - Feb 2021</div>
+                    </div>
+                    <ul class="achievements">
+                        <li>Applied SLAM on DrRobot's Jaguar with an RPLIDAR A1, ZED stereo camera and RTAB-Map, creating 2D occupancy grids and 3D maps from RGB and depth images</li>
+                        <li>Built a foundation in robot kinematics and ROS: packages, services, parameter servers, rosbags, route planning and autonomous navigation</li>
+                    </ul>
+                </div>
+                <div class="timeline-item timeline-item-compact fade-in">
+                    <div class="timeline-header">
+                        <div>
+                            <div class="job-title">IoT Intern</div>
+                            <div class="company-name">Melody Hobby Center, New Delhi</div>
+                        </div>
+                        <div class="duration">Jan 2018 - Mar 2018</div>
+                    </div>
+                    <ul class="achievements">
+                        <li>Conducted IoT workshops and created an Arduino-based security system (<a href="https://www.ijert.org/persons-identity-verification-using-arduino-uno" target="_blank" rel="noopener">article</a>)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-more fade-in">
+                <a href="vaibhav_ahluwalia_resume_2026.pdf" class="project-link" target="_blank" rel="noopener">
+                    <i class="fas fa-file-alt"></i>
+                    Full details in my résumé
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- About/Skills Section -->
-    <section id="about" class="section">
+    <!-- Education & Awards Section -->
+    <section id="education" class="section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Education &amp; Awards</h2>
+            </div>
+
+            <div class="edu-grid">
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="skill-title">Education</h3>
+                    <div class="edu-item">
+                        <div class="edu-degree">Masters in Information Technology</div>
+                        <div class="edu-school">Liepaja University, Liepaja, Latvia</div>
+                        <div class="duration">Sep 2019 - Jul 2021</div>
+                    </div>
+                    <div class="edu-item">
+                        <div class="edu-degree">Bachelors in Computer Applications</div>
+                        <div class="edu-school">Guru Gobind Singh Indraprastha University, New Delhi, India</div>
+                        <div class="duration">Aug 2016 - Jul 2019</div>
+                    </div>
+                </div>
+
+                <div class="skill-card fade-in">
+                    <div class="skill-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3 class="skill-title">Awards</h3>
+                    <ul class="achievements">
+                        <li>Appreciation certificate for coordinating and conducting a workshop and training on "Digital Electronics and Robotics"</li>
+                        <li>Certificate of excellence for "Project exhibition and presentation on IoT"</li>
+                        <li>Award for being a member of the Robotics and AI committee</li>
+                        <li>Award for coordinating the "Robo Rally" event at the Techno Sapiens technical fest of IITM</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section">
         <div class="container">
             <div class="section-header fade-in">
                 <h2 class="section-title">Expertise & Technologies</h2>
@@ -882,29 +1569,32 @@
                     <div class="skill-icon">
                         <i class="fas fa-microchip"></i>
                     </div>
-                    <h3 class="skill-title">Hardware Platforms</h3>
+                    <h3 class="skill-title">Hardware &amp; Sensors</h3>
                     <div class="skill-tags">
                         <span class="tag">NVIDIA Jetson</span>
-                        <span class="tag">Arduino</span>
                         <span class="tag">Raspberry Pi</span>
-                        <span class="tag">Teensy</span>
-                        <span class="tag">Node MCU</span>
-                        <span class="tag">Embedded Systems</span>
+                        <span class="tag">Arduino / Teensy</span>
+                        <span class="tag">Intel RealSense</span>
+                        <span class="tag">ZED Camera</span>
+                        <span class="tag">Zivid</span>
+                        <span class="tag">Luxonis OAK-D</span>
+                        <span class="tag">Ouster / RPLIDAR</span>
                     </div>
                 </div>
 
                 <div class="skill-card fade-in">
                     <div class="skill-icon">
-                        <i class="fas fa-eye"></i>
+                        <i class="fas fa-industry"></i>
                     </div>
-                    <h3 class="skill-title">Sensor Integration</h3>
+                    <h3 class="skill-title">Industrial Automation</h3>
                     <div class="skill-tags">
-                        <span class="tag">Intel RealSense</span>
-                        <span class="tag">Zed Camera</span>
-                        <span class="tag">RPLIDAR</span>
-                        <span class="tag">Ouster LiDAR</span>
-                        <span class="tag">IMU Fusion</span>
-                        <span class="tag">Point Clouds</span>
+                        <span class="tag">Beckhoff PLCs</span>
+                        <span class="tag">TwinCAT</span>
+                        <span class="tag">Codesys</span>
+                        <span class="tag">OPC UA</span>
+                        <span class="tag">ADS</span>
+                        <span class="tag">MQTT</span>
+                        <span class="tag">PostgreSQL</span>
                     </div>
                 </div>
 
@@ -916,294 +1606,11 @@
                     <div class="skill-tags">
                         <span class="tag">C/C++</span>
                         <span class="tag">Python</span>
+                        <span class="tag">Go</span>
                         <span class="tag">Embedded C</span>
                         <span class="tag">XML</span>
                         <span class="tag">Linux</span>
                         <span class="tag">Git</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Experience Section -->
-    <section id="experience" class="section">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title">Professional Journey</h2>
-                <p class="section-subtitle">
-                    Leading robotics innovation across autonomous systems, manipulation, and mobile platforms
-                </p>
-            </div>
-
-            <div class="timeline">
-                <div class="timeline-item fade-in">
-                    <div class="timeline-header">
-                        <div>
-                            <div class="job-title">Lead Robotics Engineer</div>
-                            <div class="company-name">Cudatech Software & Engineering, Ankara</div>
-                        </div>
-                        <div class="duration">Aug 2024 - Apr 2025</div>
-                    </div>
-                    <ul class="achievements">
-                        <li>Developed hardware interface for DH gripper AG95 integration with Elfin5 robotic arm using ROS and MoveIt configuration</li>
-                        <li>Integrated autonomous mobile robot (AMR) with robotic manipulator for mobile manipulation tasks, specializing in table cleaning applications</li>
-                        <li>Designed and implemented advanced table-cleaning planner using point cloud data for 3D cleaning path generation</li>
-                        <li>Created comprehensive cleaning management system with real-time monitoring, start/stop functionality, and status tracking</li>
-                        <li>Led cross-functional robotics team while maintaining hands-on technical development and architecture decisions</li>
-                    </ul>
-                </div>
-
-                <div class="timeline-item fade-in">
-                    <div class="timeline-header">
-                        <div>
-                            <div class="job-title">Robotics Engineer</div>
-                            <div class="company-name">SolarCleano, Luxembourg</div>
-                        </div>
-                        <div class="duration">Oct 2023 - Apr 2024</div>
-                    </div>
-                    <ul class="achievements">
-                        <li>Implemented autonomous behaviors using FlexBE ROS framework on solar panel cleaning robot B1A</li>
-                        <li>Developed custom Global planner adhering to nav_core::BaseGlobalPlanner interface for move_base node</li>
-                        <li>Created comprehensive simulation environment with Gazebo and automated world generation using real-world obstacle poses</li>
-                        <li>Optimized navigation algorithms for outdoor solar farm environments with complex terrain challenges</li>
-                    </ul>
-                </div>
-
-                <div class="timeline-item fade-in">
-                    <div class="timeline-header">
-                        <div>
-                            <div class="job-title">Robotics Research Assistant</div>
-                            <div class="company-name">Elektronikas datorzinātņu institūts, Riga</div>
-                        </div>
-                        <div class="duration">Feb 2022 - Oct 2023</div>
-                    </div>
-                    <ul class="achievements">
-                        <li>Developed comprehensive ROS2 control package for AR4 robotic arm integrated with Tiago base for advanced mobile manipulation tasks (Edge AI project)</li>
-                        <li>Conducted cutting-edge research in 3D semantic segmentation for enhanced robotic mapping and environmental perception capabilities</li>
-                        <li>Successfully deployed and optimized 3D SLAM solutions using Intel RealSense D415 on PAL Robotics Tiago base platform</li>
-                        <li>Assisted Architecting and implementing robotic package sorting system using UR5 robot with AI-based high precision grasp detection for TRINITY project</li>
-                        <li>Achieved breakthrough 98% confidence bottle detection at 30 fps using retrained Jetson-inference mobilenet-SSD model for environmental cleanup applications</li>
-                        <li>Implemented autonomous exploration algorithms using move_base and explore_lite ROS packages for unknown environment mapping</li>
-                        <li>Collaborated with international research teams on EU-funded robotics projects focusing on industrial automation</li>
-                        <li>Published research findings</li>
-                    </ul>
-                </div>
-
-                <div class="timeline-item fade-in">
-                    <div class="timeline-header">
-                        <div>
-                            <div class="job-title">Robotics Programming Engineer</div>
-                            <div class="company-name">Elektronikas datorzinātņu institūts, Riga</div>
-                        </div>
-                        <div class="duration">Feb 2021 - Jan 2022</div>
-                    </div>
-                    <ul class="achievements">
-                        <li>Conducted comprehensive visual odometry performance comparison using Intel RealSense T265, D435, and Zed stereo camera systems</li>
-                        <li>Utilized OptiTrack motion capture system for ground truth validation, determining T265 as optimal sensor configuration</li>
-                        <li>Designed and built autonomous tracked mobile robot using NVIDIA Jetson Xavier NX with advanced navigation capabilities</li>
-                        <li>Implemented robust SLAM and path planning algorithms via RTAB-MAP and move_base ROS libraries</li>
-                        <li>Developed sophisticated sensor fusion system using Extended Kalman Filter for enhanced localization accuracy</li>
-                        <li>Integrated multiple sensor modalities including LiDAR, cameras, and IMU for comprehensive environmental perception</li>
-                        <li>Authored and published research paper on autonomous tracked mobile robot development and benchmarking (VIZTA project)</li>
-                        <li>Optimized robot performance for various terrain conditions and environmental challenges</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="section">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2 class="section-title">Featured Projects</h2>
-                <p class="section-subtitle">
-                    Innovative robotics solutions spanning mobile manipulation, autonomous navigation, and AI-driven perception
-                </p>
-            </div>
-
-            <div class="projects-grid">
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        <img src="MobileManipulationSystem.png" alt="Mobile Manipulation System" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Mobile Manipulation System</h3>
-                        <p class="project-description">
-                            Integrated autonomous mobile robot with robotic manipulator for advanced table cleaning applications. Features 3D path planning using point cloud data and real-time cleaning management system.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">ROS</span>
-                            <span class="tech-tag">MoveIt</span>
-                            <span class="tech-tag">Point Cloud</span>
-                            <span class="tech-tag">3D Planning</span>
-                            <span class="tech-tag">Mobile Manipulation</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://drive.google.com/file/d/1uaV_xkGoV1jQ4ZuOhSgEodQ5nWT6aq-n/view?usp=share_link" class="project-link" target="_blank">
-                                <i class="fas fa-video"></i>
-                                Demo Video
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        <img src="B1A.HEIC" alt="Autonomous Solar Panel Cleaning Robot" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Autonomous Solar Panel Cleaning Robot</h3>
-                        <p class="project-description">
-                            SolarCleano B1A robot with FlexBE behavior implementation. Custom global planner with Gazebo simulation environment and real-world obstacle mapping capabilities.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">FlexBE ROS</span>
-                            <span class="tech-tag">Navigation</span>
-                            <span class="tech-tag">Gazebo</span>
-                            <span class="tech-tag">Path Planning</span>
-                            <span class="tech-tag">Outdoor Robotics</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://www.solarcleano.com/products-autonomous-solarcleano-b1a" class="project-link" target="_blank">
-                                <i class="fas fa-external-link-alt"></i>
-                                Product Page
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        <img src="Jaguar.jpeg" alt="Autonomous Tracked Mobile Robot" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Autonomous Tracked Mobile Robot</h3>
-                        <p class="project-description">
-                            Built using NVIDIA Jetson Xavier NX with SLAM and path planning via RTAB-MAP. Implemented sensor fusion with Extended Kalman Filter for enhanced localization accuracy.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">NVIDIA Jetson</span>
-                            <span class="tech-tag">RTAB-MAP</span>
-                            <span class="tech-tag">EKF</span>
-                            <span class="tech-tag">SLAM</span>
-                            <span class="tech-tag">Sensor Fusion</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://www.researchgate.net/publication/358248333_Construction_and_benchmark_of_an_autonomous_tracked_mobile_robot_system" class="project-link" target="_blank">
-                                <i class="fas fa-graduation-cap"></i>
-                                Research Paper
-                            </a>
-                            <a href="https://drive.google.com/file/d/1wCusOr3aWtvzOS_CrD9gdRU1NeCQUcZj/view?usp=share_link" class="project-link" target="_blank">
-                                <i class="fas fa-video"></i>
-                                Demo Video
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        <img src="AI-PoweredPackageSortingSystem.png" alt="AI-Powered Package Sorting System" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">AI-Powered Package Sorting System</h3>
-                        <p class="project-description">
-                            Robotic solution for post office automation using UR5 robot with AI-based high precision grasp detection. Part of the TRINITY project for automated logistics.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">UR5 Robot</span>
-                            <span class="tech-tag">AI Grasping</span>
-                            <span class="tech-tag">Computer Vision</span>
-                            <span class="tech-tag">Logistics</span>
-                            <span class="tech-tag">TRINITY Project</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://drive.google.com/file/d/1VHLhA7Kg9xgYuSutmUAiM6AMAW4Q3PTb/view?usp=share_link" class="project-link" target="_blank">
-                                <i class="fas fa-video"></i>
-                                Demo Video
-                            </a>
-                            <a href="https://www.mdpi.com/2076-3417/13/13/7643" class="project-link" target="_blank">
-                                <i class="fas fa-file-pdf"></i>
-                                Published Article
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        <img src="3D_pose_of_detected_bottle.jpg" alt="Real-time Object Detection System" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Real-time Object Detection System</h3>
-                        <p class="project-description">
-                            Retrained Jetson-inference mobilenet-SSD model achieving 98% confidence at 30 fps for crushed bottle detection. Integrated with autonomous navigation for environmental cleanup.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">MobileNet-SSD</span>
-                            <span class="tech-tag">Jetson Inference</span>
-                            <span class="tech-tag">Real-time Detection</span>
-                            <span class="tech-tag">Environment Cleanup</span>
-                            <span class="tech-tag">Edge AI</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://drive.google.com/file/d/1_QNgQGoFb3ye8VW6oO51bZaegWpRPKaI/view?usp=share_link" class="project-link" target="_blank">
-                                <i class="fas fa-video"></i>
-                                Demo Video
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        <img src="Constructionandbenchmarkofanautonomoustrackedmobilerobotsystem.png" alt="Visual Odometry Comparison Study" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Visual Odometry Comparison Study</h3>
-                        <p class="project-description">
-                            Comprehensive analysis of visual odometry techniques using Intel RealSense T265, D435, and Zed stereo camera. OptiTrack validation determined optimal sensor configuration.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Visual Odometry</span>
-                            <span class="tech-tag">Intel RealSense</span>
-                            <span class="tech-tag">Zed Camera</span>
-                            <span class="tech-tag">OptiTrack</span>
-                            <span class="tech-tag">Benchmarking</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="Constructionandbenchmarkofanautonomoustrackedmobilerobotsystem.pdf" class="project-link" target="_blank">
-                                <i class="fas fa-file-pdf"></i>
-                                Research Paper
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card fade-in">
-                    <div class="project-image">
-                        <img src="AR4_arm.jpg" alt="AR4 Robotic Arm with ROS2" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">AR4 Robotic Arm with ROS2 Interface</h3>
-                        <p class="project-description">
-                            Developed comprehensive ROS2 control package for AR4 robotic arm integrated with Tiago base for advanced mobile manipulation tasks. Implemented MoveIt configuration for precise arm control and coordination.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">ROS2</span>
-                            <span class="tech-tag">MoveIt</span>
-                            <span class="tech-tag">AR4 Arm</span>
-                            <span class="tech-tag">Tiago Base</span>
-                            <span class="tech-tag">Mobile Manipulation</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://drive.google.com/file/d/1mCH7Mi5NGciucyi1u1tgrhPysb0KHCKX/view?usp=share_link" class="project-link" target="_blank">
-                                <i class="fas fa-video"></i>
-                                Demo Video
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1275,10 +1682,11 @@
                             <span class="tag">ROS Development</span>
                             <span class="tag">Sensor Fusion</span>
                             <span class="tag">Autonomous Systems</span>
+                            <span class="tag">Industrial Automation</span>
                         </div>
                         
                         <div style="margin-top: 2rem;">
-                            <a href="Vaibhav_Ahluwalia_Resume.pdf" class="btn btn-primary">
+                            <a href="vaibhav_ahluwalia_resume_2026.pdf" class="btn btn-primary">
                                 <i class="fas fa-download"></i>
                                 Download Resume
                             </a>
@@ -1289,31 +1697,10 @@
         </div>
     </section>
 
-    <!-- Company Logos Section -->
-    <section class="logos-section">
-        <div class="logos-container">
-            <h3 class="logos-title">Where I've Made an Impact</h3>
-            <div class="logos-grid">
-                <div class="logo-item fade-in">
-                    <img src="EDI.png" alt="Elektronikas datorzinātņu institūts" class="logo-image">
-                    <span class="logo-name">Elektronikas datorzinātņu institūts</span>
-                </div>
-                <div class="logo-item fade-in">
-                    <img src="Solarcleano.jpg" alt="SolarCleano" class="logo-image">
-                    <span class="logo-name">SolarCleano</span>
-                </div>
-                <div class="logo-item fade-in">
-                    <img src="Cudatech.png" alt="Cudatech" class="logo-image">
-                    <span class="logo-name">Cudatech</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 Vaibhav Ahluwalia. Crafted with passion for robotics innovation.</p>
+            <p>&copy; <span id="year">2026</span> Vaibhav Ahluwalia. Crafted with passion for robotics innovation.</p>
             <p style="margin-top: 0.5rem; font-size: 0.9rem;">
                 "Building tomorrow's autonomous world, one robot at a time."
             </p>
@@ -1387,25 +1774,35 @@
             });
         }
 
-        // Hover Effects for Project Cards
-        function projectCardEffects() {
-            const projectCards = document.querySelectorAll('.project-card');
-            projectCards.forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    card.style.transform = 'translateY(-10px) scale(1.02)';
+        // Project demo loops: play only while on screen; skip autoplay for reduced-motion users
+        function setupProjectVideos() {
+            const videos = document.querySelectorAll('.project-video');
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduceMotion || !('IntersectionObserver' in window)) return;
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    if (entry.isIntersecting) {
+                        video.play().catch(() => {});
+                    } else {
+                        video.pause();
+                    }
                 });
-                
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'translateY(0) scale(1)';
-                });
+            }, { threshold: 0.35 });
+
+            videos.forEach(video => {
+                video.muted = true;
+                observer.observe(video);
             });
         }
 
         // Initialize all functions
         document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('year').textContent = new Date().getFullYear();
             createParticles();
             smoothScrolling();
-            projectCardEffects();
+            setupProjectVideos();
             animateOnScroll();
         });
 
